@@ -6,6 +6,10 @@ import java.io.InputStream;
 public class BufferedInputStream extends InputStream {
     InputStream target;
 
+    BufferedInputStream(InputStream inputStream){
+        this.target = inputStream;
+    }
+
     @Override
     public int read(byte[] b) throws IOException {
         return super.read(b);
@@ -22,7 +26,7 @@ public class BufferedInputStream extends InputStream {
     }
 
     @Override
-    public int read() throws IOException {
+    public int read() {
         return 0;
     }
 }

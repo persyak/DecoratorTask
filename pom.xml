@@ -9,27 +9,17 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!-- Dependency versions -->
-        <junit.jupiter.version>5.7.2</junit.jupiter.version>
-
-        <!-- Java 16 -->
-        <java.version>16</java.version>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
-    <!-- Jupiter API for writing tests -->
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <!-- Maven Surefire plugin to run tests -->
     <build>
         <plugins>
-            <!-- Maven plugin to use particular java version to compile code -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,5 +31,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
