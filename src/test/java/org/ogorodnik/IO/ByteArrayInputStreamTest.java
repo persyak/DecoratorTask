@@ -22,33 +22,36 @@ public class ByteArrayInputStreamTest {
 
     @Test
     public void testReadToByteArray() throws IOException {
-        String content = "Hello";
-        byte[] buffer = new byte[content.getBytes().length + 1];
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
-        assertEquals(5, byteArrayInputStream.read(buffer));
-        assertEquals('H', buffer[0]);
-        assertEquals('e', buffer[1]);
-        assertEquals('l', buffer[2]);
-        assertEquals('l', buffer[3]);
-        assertEquals('o', buffer[4]);
-        assertEquals(0, buffer[5]);
-        assertEquals(-1, byteArrayInputStream.read(buffer));
+        String content = "Hello world";
+        byte[] buffer = new byte[5];
+        ByteArrayInputStream byteArrayInputStream
+                = new ByteArrayInputStream(content.getBytes());
+        assertEquals(4, byteArrayInputStream.read(buffer));
+        assertEquals('H', (char) buffer[0]);
+        assertEquals('e', (char) buffer[1]);
+        assertEquals('l', (char) buffer[2]);
+        assertEquals('l', (char) buffer[3]);
+        assertEquals(0, buffer[4]);
     }
 
     @Test
     public void testReadWithOffAndLen() throws IOException {
-        String content = "Hello";
-        byte[] buffer = new byte[10];
+        String content = "Hello world";
+        byte[] buffer = new byte[5];
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
-        assertEquals(5, byteArrayInputStream.read(buffer, 1, 5));
-        assertEquals(0, buffer[0]);
-        assertEquals('H', buffer[1]);
-        assertEquals('e', buffer[2]);
-        assertEquals('l', buffer[3]);
-        assertEquals('l', buffer[4]);
-        assertEquals('o', buffer[5]);
-        assertEquals(0, buffer[6]);
-        assertEquals(-1, byteArrayInputStream.read(buffer, 1, 5));
+//        int a = byteArrayInputStream.read(buffer, 0, 4);
+//        int b = byteArrayInputStream.read(buffer, 0, 4);
+//        int c = byteArrayInputStream.read(buffer, 0, 4);
+//        int d = byteArrayInputStream.read(buffer, 0, 4);
+        assertEquals(4, byteArrayInputStream.read(buffer, 0, 4));
+        assertEquals('H', (char) buffer[0]);
+        assertEquals('e', (char) buffer[1]);
+        assertEquals('l', (char) buffer[2]);
+        assertEquals('l', (char) buffer[3]);
+        assertEquals(0, buffer[4]);
+        assertEquals(4, byteArrayInputStream.read(buffer, 0, 4));
+        assertEquals(3, byteArrayInputStream.read(buffer, 0, 4));
+        assertEquals(-1, byteArrayInputStream.read(buffer, 0, 4));
     }
 
     @Test
@@ -56,5 +59,6 @@ public class ByteArrayInputStreamTest {
         String content = "Hello";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
         byteArrayInputStream.close();
+        assertEquals('H', (char) byteArrayInputStream.read());;
     }
 }

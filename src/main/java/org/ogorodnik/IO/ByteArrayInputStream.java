@@ -13,17 +13,41 @@ public class ByteArrayInputStream extends InputStream {
 
     @Override
     public int read(byte[] b) throws IOException {
-        return super.read(b);
+        return read(b, 0, b.length-2);
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return super.read(b, off, len);
+        int localCounter = 0;
+        if (b == null) {
+            throw new NullPointerException("target array is null");
+        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+            throw new IndexOutOfBoundsException(
+                    "off or len is less than zero or len is greater than b length minus off");
+        } else {
+            if (len < (bytes.length - position)) {
+                for (int i = 0; i < len; i++) {
+                    b[i] = bytes[position];
+                    position++;
+                    localCounter++;
+                }
+            } else if((bytes.length - position) == 0){
+                return -1;
+            } else {
+                int countMinusPosition = bytes.length - position;
+                for (int i = 0; i < countMinusPosition; i++) {
+                    b[i] = bytes[position];
+                    position++;
+                    localCounter++;
+                }
+            }
+            return localCounter;
+        }
     }
 
     @Override
     public void close() throws IOException {
-        super.close();
+        //from description it does nothing
     }
 
     @Override
