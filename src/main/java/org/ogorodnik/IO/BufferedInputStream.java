@@ -6,7 +6,10 @@ import java.io.InputStream;
 public class BufferedInputStream extends InputStream {
     private final static int DEFAULT_ARRAY_SIZE = 32;
     InputStream target;
-    byte[] buffer;
+    byte[] buf;
+    int bufIndex = 0;
+    int count = 0;
+    boolean isClosed = false;
 
     public BufferedInputStream(InputStream target){
         this(target, DEFAULT_ARRAY_SIZE);
@@ -14,7 +17,7 @@ public class BufferedInputStream extends InputStream {
 
     public BufferedInputStream(InputStream target, int size){
         this.target = target;
-        buffer = new byte[size];
+        buf = new byte[size];
     }
 
     @Override
@@ -24,18 +27,67 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        target.read(b, off, len);
-
-        return 0;
+        //в оригинальном методе если в буфере осталось меньше байт, чем нужно вычитать,
+        //то программа вычитает только только оставшееся количество бай и загрузит следующую порцию
+        //уже при следующем вызове
+        if(isClosed){
+            throw new IOException("Stream closed");
+        }
+        if (b == null) {
+            throw new NullPointerException("target array is null");
+        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+            throw new IndexOutOfBoundsException(
+                    "off or len is less than zero or len is greater than b length minus off");
+        } else {
+            int localCounter = 0;
+            if (bufIndex == count) {
+                count = target.read(buf);
+                bufIndex = 0;
+            }
+            if(count == -1){
+                return -1;
+            } else {
+                int differenceBetweenBufLengthAndBufferIndex = count - bufIndex;
+                if (differenceBetweenBufLengthAndBufferIndex > len) {
+                    for (int i = 0; i < len; i++) {
+                        b[off] = buf[bufIndex];
+                        bufIndex++;
+                        off++;
+                        localCounter++;
+                    }
+                } else {
+                    for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
+                        b[off] = buf[bufIndex];
+                        bufIndex++;
+                        off++;
+                        localCounter++;
+                    }
+                }
+                return localCounter;
+            }
+        }
     }
 
     @Override
     public void close() throws IOException {
-        super.close();
+        isClosed = true;
     }
 
     @Override
-    public int read() {
-        return 0;
+    public int read() throws IOException {
+        if(isClosed){
+            throw new IOException("Stream closed");
+        }
+        if (bufIndex == count) {
+            count = target.read(buf);
+            bufIndex = 0;
+        }
+        if(count == -1){
+            return -1;
+        } else{
+            byte element = buf[bufIndex];
+            bufIndex++;
+            return element;
+        }
     }
 }

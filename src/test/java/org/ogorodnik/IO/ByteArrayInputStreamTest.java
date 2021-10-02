@@ -26,12 +26,15 @@ public class ByteArrayInputStreamTest {
         byte[] buffer = new byte[5];
         ByteArrayInputStream byteArrayInputStream
                 = new ByteArrayInputStream(content.getBytes());
-        assertEquals(4, byteArrayInputStream.read(buffer));
+        assertEquals(5, byteArrayInputStream.read(buffer));
         assertEquals('H', (char) buffer[0]);
         assertEquals('e', (char) buffer[1]);
         assertEquals('l', (char) buffer[2]);
         assertEquals('l', (char) buffer[3]);
-        assertEquals(0, buffer[4]);
+        assertEquals('o', (char) buffer[4]);
+        assertEquals(5, byteArrayInputStream.read(buffer));
+        assertEquals(1, byteArrayInputStream.read(buffer));
+        assertEquals(-1, byteArrayInputStream.read(buffer));
     }
 
     @Test
@@ -39,10 +42,6 @@ public class ByteArrayInputStreamTest {
         String content = "Hello world";
         byte[] buffer = new byte[5];
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
-//        int a = byteArrayInputStream.read(buffer, 0, 4);
-//        int b = byteArrayInputStream.read(buffer, 0, 4);
-//        int c = byteArrayInputStream.read(buffer, 0, 4);
-//        int d = byteArrayInputStream.read(buffer, 0, 4);
         assertEquals(4, byteArrayInputStream.read(buffer, 0, 4));
         assertEquals('H', (char) buffer[0]);
         assertEquals('e', (char) buffer[1]);
@@ -59,6 +58,6 @@ public class ByteArrayInputStreamTest {
         String content = "Hello";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
         byteArrayInputStream.close();
-        assertEquals('H', (char) byteArrayInputStream.read());;
+        assertEquals('H', (char) byteArrayInputStream.read());
     }
 }

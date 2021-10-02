@@ -13,7 +13,7 @@ public class ByteArrayInputStream extends InputStream {
 
     @Override
     public int read(byte[] b) throws IOException {
-        return read(b, 0, b.length-2);
+        return read(b, 0, b.length);
     }
 
     @Override
@@ -27,8 +27,9 @@ public class ByteArrayInputStream extends InputStream {
         } else {
             if (len < (bytes.length - position)) {
                 for (int i = 0; i < len; i++) {
-                    b[i] = bytes[position];
+                    b[off] = bytes[position];
                     position++;
+                    off++;
                     localCounter++;
                 }
             } else if((bytes.length - position) == 0){
@@ -36,8 +37,9 @@ public class ByteArrayInputStream extends InputStream {
             } else {
                 int countMinusPosition = bytes.length - position;
                 for (int i = 0; i < countMinusPosition; i++) {
-                    b[i] = bytes[position];
+                    b[off] = bytes[position];
                     position++;
+                    off++;
                     localCounter++;
                 }
             }
