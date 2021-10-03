@@ -32,7 +32,7 @@ public class ByteArrayInputStream extends InputStream {
                     off++;
                     localCounter++;
                 }
-            } else if((bytes.length - position) == 0){
+            } else if ((bytes.length - position) == 0) {
                 return -1;
             } else {
                 int countMinusPosition = bytes.length - position;
@@ -58,7 +58,7 @@ public class ByteArrayInputStream extends InputStream {
         if (position < bytes.length) {
             element = bytes[position];
             position++;
-        } else{
+        } else {
             element = -1;
         }
         return element;

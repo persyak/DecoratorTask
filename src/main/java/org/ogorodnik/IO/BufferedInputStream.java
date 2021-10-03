@@ -11,11 +11,11 @@ public class BufferedInputStream extends InputStream {
     int count = 0;
     boolean isClosed = false;
 
-    public BufferedInputStream(InputStream target){
+    public BufferedInputStream(InputStream target) {
         this(target, DEFAULT_ARRAY_SIZE);
     }
 
-    public BufferedInputStream(InputStream target, int size){
+    public BufferedInputStream(InputStream target, int size) {
         this.target = target;
         buf = new byte[size];
     }
@@ -30,7 +30,7 @@ public class BufferedInputStream extends InputStream {
         //в оригинальном методе если в буфере осталось меньше байт, чем нужно вычитать,
         //то программа вычитает только только оставшееся количество бай и загрузит следующую порцию
         //уже при следующем вызове
-        if(isClosed){
+        if (isClosed) {
             throw new IOException("Stream closed");
         }
         if (b == null) {
@@ -44,7 +44,7 @@ public class BufferedInputStream extends InputStream {
                 count = target.read(buf);
                 bufIndex = 0;
             }
-            if(count == -1){
+            if (count == -1) {
                 return -1;
             } else {
                 int differenceBetweenBufLengthAndBufferIndex = count - bufIndex;
@@ -75,16 +75,16 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if(isClosed){
+        if (isClosed) {
             throw new IOException("Stream closed");
         }
         if (bufIndex == count) {
             count = target.read(buf);
             bufIndex = 0;
         }
-        if(count == -1){
+        if (count == -1) {
             return -1;
-        } else{
+        } else {
             byte element = buf[bufIndex];
             bufIndex++;
             return element;

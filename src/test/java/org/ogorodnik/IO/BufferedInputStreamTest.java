@@ -1,7 +1,9 @@
 package org.ogorodnik.IO;
 
 import org.junit.jupiter.api.Test;
+
 import java.io.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BufferedInputStreamTest {
@@ -47,7 +49,7 @@ class BufferedInputStreamTest {
         String content = "Hello world";
         BufferedInputStream bufferedInputStream
                 = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
-        assertEquals('H', (char)bufferedInputStream.read());
+        assertEquals('H', (char) bufferedInputStream.read());
         bufferedInputStream.close();
         assertThrows(IOException.class, bufferedInputStream::read);
     }
@@ -57,11 +59,11 @@ class BufferedInputStreamTest {
         String content = "Hello";
         BufferedInputStream bufferedInputStream
                 = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
-        assertEquals('H', (char)bufferedInputStream.read());
-        assertEquals('e', (char)bufferedInputStream.read());
-        assertEquals('l', (char)bufferedInputStream.read());
-        assertEquals('l', (char)bufferedInputStream.read());
-        assertEquals('o', (char)bufferedInputStream.read());
+        assertEquals('H', (char) bufferedInputStream.read());
+        assertEquals('e', (char) bufferedInputStream.read());
+        assertEquals('l', (char) bufferedInputStream.read());
+        assertEquals('l', (char) bufferedInputStream.read());
+        assertEquals('o', (char) bufferedInputStream.read());
         assertEquals(-1, bufferedInputStream.read());
     }
 
@@ -70,11 +72,11 @@ class BufferedInputStreamTest {
         String content = "Hello";
         BufferedInputStream bufferedInputStream
                 = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()), 4);
-        assertEquals('H', (char)bufferedInputStream.read());
-        assertEquals('e', (char)bufferedInputStream.read());
-        assertEquals('l', (char)bufferedInputStream.read());
-        assertEquals('l', (char)bufferedInputStream.read());
-        assertEquals('o', (char)bufferedInputStream.read());
+        assertEquals('H', (char) bufferedInputStream.read());
+        assertEquals('e', (char) bufferedInputStream.read());
+        assertEquals('l', (char) bufferedInputStream.read());
+        assertEquals('l', (char) bufferedInputStream.read());
+        assertEquals('o', (char) bufferedInputStream.read());
         assertEquals(-1, bufferedInputStream.read());
     }
 }

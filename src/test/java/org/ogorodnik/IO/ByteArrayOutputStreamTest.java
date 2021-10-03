@@ -2,11 +2,7 @@ package org.ogorodnik.IO;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ByteArrayOutputStreamTest {
 
@@ -46,7 +42,5 @@ public class ByteArrayOutputStreamTest {
         byteArrayOutputStream.write(b[0]);
         byteArrayOutputStream.write(b[1]);
         byteArrayOutputStream.write(b[2]);
-//        byte[] x = byteArrayOutputStream.toByteArray();
-
     }
 }

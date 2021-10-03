@@ -10,25 +10,25 @@ public class BufferedOutputStream extends OutputStream {
     int bufIndex = 0;
     boolean isClosed = false;
 
-    public BufferedOutputStream(OutputStream target){
+    public BufferedOutputStream(OutputStream target) {
         this(target, DEFAULT_ARRAY_SIZE);
     }
 
-    public BufferedOutputStream(OutputStream target, int size){
+    public BufferedOutputStream(OutputStream target, int size) {
         this.target = target;
         buf = new byte[size];
     }
 
     @Override
     public void write(int b) throws IOException {
-        if(isClosed){
+        if (isClosed) {
             throw new IOException("Stream closed");
         }
-        if(bufIndex == buf.length){
+        if (bufIndex == buf.length) {
             target.write(buf);
             bufIndex = 0;
         }
-        buf[bufIndex] = (byte)b;
+        buf[bufIndex] = (byte) b;
         bufIndex++;
     }
 
@@ -39,7 +39,7 @@ public class BufferedOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        if(isClosed){
+        if (isClosed) {
             throw new IOException("Stream closed");
         }
         if (b == null) {
@@ -51,7 +51,7 @@ public class BufferedOutputStream extends OutputStream {
             if (len > buf.length) {
                 target.write(b, off, len);
             } else {
-                if(len > (buf.length-bufIndex)){
+                if (len > (buf.length - bufIndex)) {
                     target.write(buf, 0, bufIndex);
                     bufIndex = 0;
                 }

@@ -1,7 +1,5 @@
 package org.ogorodnik.IO;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -69,8 +67,8 @@ class BufferedOutputStreamTest {
         bufferedOutputStream.write(buffer, 1, 8);
         assertEquals(8, bufferedOutputStream.bufIndex);
         assertEquals(0, byteArrayOutputStream.getPosition());
-        assertEquals('e', (char)bufferedOutputStream.buf[0]);
-        assertEquals('r', (char)bufferedOutputStream.buf[7]);
+        assertEquals('e', (char) bufferedOutputStream.buf[0]);
+        assertEquals('r', (char) bufferedOutputStream.buf[7]);
         byte[] byteArrayOutputStreamArray = byteArrayOutputStream.getBytes();
         assertEquals(0, byteArrayOutputStreamArray[0]);
         assertEquals(0, byteArrayOutputStreamArray[7]);
@@ -129,7 +127,7 @@ class BufferedOutputStreamTest {
                 new BufferedOutputStream(new ByteArrayOutputStream(), 7);
         bufferedOutputStream.write(buffer, 1, 5);
         bufferedOutputStream.close();
-        assertThrows(IOException.class, ()-> {
+        assertThrows(IOException.class, () -> {
             bufferedOutputStream.write(buffer, 1, 5);
         });
         bufferedOutputStream.flush();
