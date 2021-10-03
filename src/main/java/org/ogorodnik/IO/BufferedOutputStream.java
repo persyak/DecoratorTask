@@ -1,7 +1,6 @@
 package org.ogorodnik.IO;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 public class BufferedOutputStream extends OutputStream {
@@ -9,7 +8,7 @@ public class BufferedOutputStream extends OutputStream {
     OutputStream target;
     byte[] buf;
     int bufIndex = 0;
-    int count = 0;
+    boolean isClosed = false;
 
     public BufferedOutputStream(OutputStream target){
         this(target, DEFAULT_ARRAY_SIZE);
@@ -22,6 +21,9 @@ public class BufferedOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
+        if(isClosed){
+            throw new IOException("Stream closed");
+        }
         if(bufIndex == buf.length){
             target.write(buf);
             bufIndex = 0;
@@ -32,21 +34,51 @@ public class BufferedOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] b) throws IOException {
-        super.write(b);
+        write(b, 0, b.length);
     }
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        super.write(b, off, len);
+        if(isClosed){
+            throw new IOException("Stream closed");
+        }
+        if (b == null) {
+            throw new NullPointerException("target array is null");
+        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+            throw new IndexOutOfBoundsException(
+                    "off or len is less than zero or len is greater than b length minus off");
+        } else {
+            if (len > buf.length) {
+                target.write(b, off, len);
+            } else {
+                if(len > (buf.length-bufIndex)){
+                    target.write(buf, 0, bufIndex);
+                    bufIndex = 0;
+                }
+                for (int i = 0; i < len; i++) {
+                    buf[bufIndex] = b[off];
+                    bufIndex++;
+                    off++;
+                    if (bufIndex == buf.length) {
+                        target.write(buf);
+                        bufIndex = 0;
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void flush() throws IOException {
-        super.flush();
+        //it can be called even after Stream is closed
+        target.write(buf, 0, bufIndex);
+        bufIndex = 0;
     }
 
     @Override
     public void close() throws IOException {
-        super.close();
+        target.write(buf, 0, bufIndex);
+        bufIndex = 0;
+        isClosed = true;
     }
 }
