@@ -28,7 +28,7 @@ public class BufferedInputStream extends InputStream {
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         //в оригинальном методе если в буфере осталось меньше байт, чем нужно вычитать,
-        //то программа вычитает только только оставшееся количество бай и загрузит следующую порцию
+        //то программа вычитает только оставшееся количество бай и загрузит следующую порцию
         //уже при следующем вызове
         if (isClosed) {
             throw new IOException("Stream closed");
@@ -40,36 +40,47 @@ public class BufferedInputStream extends InputStream {
                     "off or len is less than zero or len is greater than b length minus off");
         } else {
             int localCounter = 0;
-            if (bufIndex == count) {
-                count = target.read(buf);
-                bufIndex = 0;
-            }
-            if (count == -1) {
-                return -1;
-            } else {
-                int differenceBetweenBufLengthAndBufferIndex = count - bufIndex;
-                if (differenceBetweenBufLengthAndBufferIndex > len) {
-                    for (int i = 0; i < len; i++) {
-                        b[off] = buf[bufIndex];
-                        bufIndex++;
-                        off++;
-                        localCounter++;
-                    }
-                } else {
-                    for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
-                        b[off] = buf[bufIndex];
-                        bufIndex++;
-                        off++;
-                        localCounter++;
-                    }
-                }
+            if ((bufIndex == 0) && (len > (buf.length-1))) {
+                localCounter = target.read(b, off, len);
                 return localCounter;
+            } else {
+                if ((bufIndex == 0) && (count == 0)) {
+                    count = target.read(buf);
+                }
+                if (count == -1) {
+                    return -1;
+                } else {
+                    int differenceBetweenBufLengthAndBufferIndex = count - bufIndex;
+                    if ((count + differenceBetweenBufLengthAndBufferIndex) > len) {
+                        for (int i = 0; i < len; i++) {
+                            b[off] = buf[bufIndex];
+                            bufIndex++;
+                            off++;
+                            localCounter++;
+                            if(bufIndex == count){
+                                count = target.read(buf);
+                            }
+                            if(count == -1){
+                                break;
+                            }
+                        }
+                    } else {
+                            for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
+                                b[off] = buf[bufIndex];
+                                bufIndex++;
+                                off++;
+                                localCounter++;
+                            }
+                            localCounter += target.read(b, off, (len - differenceBetweenBufLengthAndBufferIndex));
+                    }
+                    return localCounter;
+                }
             }
         }
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         isClosed = true;
     }
 
