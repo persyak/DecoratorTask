@@ -40,7 +40,7 @@ public class BufferedInputStream extends InputStream {
                     "off or len is less than zero or len is greater than b length minus off");
         } else {
             int localCounter = 0;
-            if ((bufIndex == 0) && (len > (buf.length-1))) {
+            if ((bufIndex == 0) && (len > (buf.length - 1))) {
                 localCounter = target.read(b, off, len);
                 return localCounter;
             } else {
@@ -57,21 +57,21 @@ public class BufferedInputStream extends InputStream {
                             bufIndex++;
                             off++;
                             localCounter++;
-                            if(bufIndex == count){
+                            if (bufIndex == count) {
                                 count = target.read(buf);
                             }
-                            if(count == -1){
+                            if (count == -1) {
                                 break;
                             }
                         }
                     } else {
-                            for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
-                                b[off] = buf[bufIndex];
-                                bufIndex++;
-                                off++;
-                                localCounter++;
-                            }
-                            localCounter += target.read(b, off, (len - differenceBetweenBufLengthAndBufferIndex));
+                        for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
+                            b[off] = buf[bufIndex];
+                            bufIndex++;
+                            off++;
+                            localCounter++;
+                        }
+                        localCounter += target.read(b, off, (len - differenceBetweenBufLengthAndBufferIndex));
                     }
                     return localCounter;
                 }
