@@ -26,8 +26,7 @@ class BufferedInputStreamTest {
                 = new BufferedInputStream((new ByteArrayInputStream(content.getBytes())), 10);
         byte[] buffer = new byte[6];
         assertEquals(6, bufferedInputStream.read(buffer));
-        assertEquals(4, bufferedInputStream.read(buffer));
-        assertEquals(1, bufferedInputStream.read(buffer));
+        assertEquals(5, bufferedInputStream.read(buffer));
         assertEquals(-1, bufferedInputStream.read(buffer));
     }
 
@@ -39,8 +38,7 @@ class BufferedInputStreamTest {
         byte[] buffer = new byte[6];
         assertEquals(3, bufferedInputStream.read(buffer, 1, 3));
         assertEquals(4, bufferedInputStream.read(buffer, 1, 4));
-        assertEquals(3, bufferedInputStream.read(buffer, 1, 4));
-        assertEquals(1, bufferedInputStream.read(buffer, 1, 4));
+        assertEquals(4, bufferedInputStream.read(buffer, 1, 4));
         assertEquals(-1, bufferedInputStream.read(buffer, 1, 4));
     }
 
@@ -79,24 +77,4 @@ class BufferedInputStreamTest {
         assertEquals('o', (char) bufferedInputStream.read());
         assertEquals(-1, bufferedInputStream.read());
     }
-
-//    @Test
-//    public void testReadCustom() throws IOException {
-//        String content = "Hello world its beautiful season";
-//        java.io.BufferedInputStream bufferedInputStream
-//                = new java.io.BufferedInputStream((new java.io.ByteArrayInputStream(content.getBytes())), 7);
-//        byte[] buffer = new byte[32];
-//        bufferedInputStream.read(buffer, 1, 6);
-//        bufferedInputStream.read(buffer, 2, 10);
-//    }
-//
-//    @Test
-//    public void testReadCustom2() throws IOException {
-//        String content = "Hello world its beautiful season";
-//        BufferedInputStream bufferedInputStream
-//                = new BufferedInputStream((new ByteArrayInputStream(content.getBytes())), 7);
-//        byte[] buffer = new byte[32];
-//        bufferedInputStream.read(buffer, 1, 5);
-//        bufferedInputStream.read(buffer, 7, 10);
-//    }
 }

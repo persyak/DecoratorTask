@@ -27,9 +27,6 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        //в оригинальном методе если в буфере осталось меньше байт, чем нужно вычитать,
-        //то программа вычитает только оставшееся количество бай и загрузит следующую порцию
-        //уже при следующем вызове
         if (isClosed) {
             throw new IOException("Stream closed");
         }
@@ -59,6 +56,7 @@ public class BufferedInputStream extends InputStream {
                             localCounter++;
                             if (bufIndex == count) {
                                 count = target.read(buf);
+                                bufIndex = 0;
                             }
                             if (count == -1) {
                                 break;
