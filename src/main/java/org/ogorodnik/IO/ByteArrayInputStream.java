@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public class ByteArrayInputStream extends InputStream {
     private byte[] bytes;
-    int position = 0;
+    private int position = 0;
 
     public ByteArrayInputStream(byte[] bytes) {
         this.bytes = bytes;

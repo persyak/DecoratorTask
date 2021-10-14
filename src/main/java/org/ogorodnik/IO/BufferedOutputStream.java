@@ -5,10 +5,10 @@ import java.io.OutputStream;
 
 public class BufferedOutputStream extends OutputStream {
     private final static int DEFAULT_ARRAY_SIZE = 32;
-    OutputStream target;
-    byte[] buf;
-    int bufIndex = 0;
-    boolean isClosed = false;
+    private OutputStream target;
+    private byte[] buffer;
+    private int bufferIndex = 0;
+    private boolean isClosed = false;
 
     public BufferedOutputStream(OutputStream target) {
         this(target, DEFAULT_ARRAY_SIZE);
@@ -16,7 +16,7 @@ public class BufferedOutputStream extends OutputStream {
 
     public BufferedOutputStream(OutputStream target, int size) {
         this.target = target;
-        buf = new byte[size];
+        buffer = new byte[size];
     }
 
     @Override
@@ -24,12 +24,12 @@ public class BufferedOutputStream extends OutputStream {
         if (isClosed) {
             throw new IOException("Stream closed");
         }
-        if (bufIndex == buf.length) {
-            target.write(buf);
-            bufIndex = 0;
+        if (bufferIndex == buffer.length) {
+            target.write(buffer);
+            bufferIndex = 0;
         }
-        buf[bufIndex] = (byte) b;
-        bufIndex++;
+        buffer[bufferIndex] = (byte) b;
+        bufferIndex++;
     }
 
     @Override
@@ -48,20 +48,20 @@ public class BufferedOutputStream extends OutputStream {
             throw new IndexOutOfBoundsException(
                     "off or len is less than zero or len is greater than b length minus off");
         } else {
-            if (len > buf.length) {
+            if (len > buffer.length) {
                 target.write(b, off, len);
             } else {
-                if (len > (buf.length - bufIndex)) {
-                    target.write(buf, 0, bufIndex);
-                    bufIndex = 0;
+                if (len > (buffer.length - bufferIndex)) {
+                    target.write(buffer, 0, bufferIndex);
+                    bufferIndex = 0;
                 }
                 for (int i = 0; i < len; i++) {
-                    buf[bufIndex] = b[off];
-                    bufIndex++;
+                    buffer[bufferIndex] = b[off];
+                    bufferIndex++;
                     off++;
-                    if (bufIndex == buf.length) {
-                        target.write(buf);
-                        bufIndex = 0;
+                    if (bufferIndex == buffer.length) {
+                        target.write(buffer);
+                        bufferIndex = 0;
                     }
                 }
             }
@@ -71,14 +71,22 @@ public class BufferedOutputStream extends OutputStream {
     @Override
     public void flush() throws IOException {
         //it can be called even after Stream is closed
-        target.write(buf, 0, bufIndex);
-        bufIndex = 0;
+        target.write(buffer, 0, bufferIndex);
+        bufferIndex = 0;
     }
 
     @Override
     public void close() throws IOException {
-        target.write(buf, 0, bufIndex);
-        bufIndex = 0;
+        target.write(buffer, 0, bufferIndex);
+        bufferIndex = 0;
         isClosed = true;
+    }
+
+    byte[] getBuffer(){
+        return buffer;
+    }
+
+    int getIndex(){
+        return bufferIndex;
     }
 }

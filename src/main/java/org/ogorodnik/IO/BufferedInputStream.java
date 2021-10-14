@@ -5,11 +5,11 @@ import java.io.InputStream;
 
 public class BufferedInputStream extends InputStream {
     private final static int DEFAULT_ARRAY_SIZE = 32;
-    InputStream target;
-    byte[] buf;
-    int bufIndex = 0;
-    int count = 0;
-    boolean isClosed = false;
+    private InputStream target;
+    private byte[] buffer;
+    private int bufferIndex = 0;
+    private int count = 0;
+    private boolean isClosed = false;
 
     public BufferedInputStream(InputStream target) {
         this(target, DEFAULT_ARRAY_SIZE);
@@ -17,7 +17,7 @@ public class BufferedInputStream extends InputStream {
 
     public BufferedInputStream(InputStream target, int size) {
         this.target = target;
-        buf = new byte[size];
+        buffer = new byte[size];
     }
 
     @Override
@@ -37,26 +37,26 @@ public class BufferedInputStream extends InputStream {
                     "off or len is less than zero or len is greater than b length minus off");
         } else {
             int localCounter = 0;
-            if ((bufIndex == 0) && (len > (buf.length - 1))) {
+            if ((bufferIndex == 0) && (len > (buffer.length - 1))) {
                 localCounter = target.read(b, off, len);
                 return localCounter;
             } else {
-                if ((bufIndex == 0) && (count == 0)) {
-                    count = target.read(buf);
+                if ((bufferIndex == 0) && (count == 0)) {
+                    count = target.read(buffer);
                 }
                 if (count == -1) {
                     return -1;
                 } else {
-                    int differenceBetweenBufLengthAndBufferIndex = count - bufIndex;
+                    int differenceBetweenBufLengthAndBufferIndex = count - bufferIndex;
                     if ((count + differenceBetweenBufLengthAndBufferIndex) > len) {
                         for (int i = 0; i < len; i++) {
-                            b[off] = buf[bufIndex];
-                            bufIndex++;
+                            b[off] = buffer[bufferIndex];
+                            bufferIndex++;
                             off++;
                             localCounter++;
-                            if (bufIndex == count) {
-                                count = target.read(buf);
-                                bufIndex = 0;
+                            if (bufferIndex == count) {
+                                count = target.read(buffer);
+                                bufferIndex = 0;
                             }
                             if (count == -1) {
                                 break;
@@ -64,8 +64,8 @@ public class BufferedInputStream extends InputStream {
                         }
                     } else {
                         for (int i = 0; i < differenceBetweenBufLengthAndBufferIndex; i++) {
-                            b[off] = buf[bufIndex];
-                            bufIndex++;
+                            b[off] = buffer[bufferIndex];
+                            bufferIndex++;
                             off++;
                             localCounter++;
                         }
@@ -87,15 +87,15 @@ public class BufferedInputStream extends InputStream {
         if (isClosed) {
             throw new IOException("Stream closed");
         }
-        if (bufIndex == count) {
-            count = target.read(buf);
-            bufIndex = 0;
+        if (bufferIndex == count) {
+            count = target.read(buffer);
+            bufferIndex = 0;
         }
         if (count == -1) {
             return -1;
         } else {
-            byte element = buf[bufIndex];
-            bufIndex++;
+            byte element = buffer[bufferIndex];
+            bufferIndex++;
             return element;
         }
     }
