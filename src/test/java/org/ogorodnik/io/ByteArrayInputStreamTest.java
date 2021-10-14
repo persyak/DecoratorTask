@@ -1,4 +1,4 @@
-package org.ogorodnik.IO;
+package org.ogorodnik.io;
 
 import org.junit.jupiter.api.Test;
 

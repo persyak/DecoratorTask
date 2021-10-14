@@ -1,4 +1,4 @@
-package org.ogorodnik.IO;
+package org.ogorodnik.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,11 +30,6 @@ public class BufferedOutputStream extends OutputStream {
         }
         buffer[bufferIndex] = (byte) b;
         bufferIndex++;
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-        write(b, 0, b.length);
     }
 
     @Override
