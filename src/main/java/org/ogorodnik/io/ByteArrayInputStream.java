@@ -17,16 +17,16 @@ public class ByteArrayInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int length) throws IOException {
         int localCounter = 0;
         if (b == null) {
             throw new NullPointerException("target array is null");
-        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+        } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
-                    "off or len is less than zero or len is greater than b length minus off");
+                    "off or length is less than zero or length is greater than b length minus off");
         } else {
-            if (len < (bytes.length - position)) {
-                for (int i = 0; i < len; i++) {
+            if (length < (bytes.length - position)) {
+                for (int i = 0; i < length; i++) {
                     b[off] = bytes[position];
                     position++;
                     off++;

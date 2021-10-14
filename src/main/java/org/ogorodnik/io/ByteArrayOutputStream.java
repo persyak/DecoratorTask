@@ -27,14 +27,14 @@ public class ByteArrayOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(byte[] b, int off, int length) throws IOException {
         if (b == null) {
             throw new NullPointerException("source array is null");
-        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+        } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
-                    "off or len is less than zero or len is greater than b length minus off");
+                    "off or length is less than zero or length is greater than b length minus off");
         } else {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < length; i++) {
                 if (position == (bytes.length - 1)) {
                     bytes = increase(bytes);
                 }

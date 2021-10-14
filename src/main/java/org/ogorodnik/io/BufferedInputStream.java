@@ -21,19 +21,19 @@ public class BufferedInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int length) throws IOException {
         if (isClosed) {
             throw new IOException("Stream closed");
         }
         if (b == null) {
             throw new NullPointerException("target array is null");
-        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+        } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
-                    "off or len is less than zero or len is greater than b length minus off");
+                    "off or length is less than zero or length is greater than b length minus off");
         }
         int localCounter = 0;
-        if ((bufferIndex == 0) && (len > (buffer.length - 1))) {
-            localCounter = target.read(b, off, len);
+        if ((bufferIndex == 0) && (length > (buffer.length - 1))) {
+            localCounter = target.read(b, off, length);
             return localCounter;
         } else {
             if ((bufferIndex == 0) && (count == 0)) {
@@ -43,16 +43,16 @@ public class BufferedInputStream extends InputStream {
                 return -1;
             } else {
                 int differenceBetweenBufferLengthAndBufferIndex = count - bufferIndex;
-                if (differenceBetweenBufferLengthAndBufferIndex >= len) {
-                    System.arraycopy(buffer, bufferIndex, b, off, len);
-                    bufferIndex += len;
-                    localCounter += len;
+                if (differenceBetweenBufferLengthAndBufferIndex >= length) {
+                    System.arraycopy(buffer, bufferIndex, b, off, length);
+                    bufferIndex += length;
+                    localCounter += length;
                 } else {
                     System.arraycopy(buffer, bufferIndex, b, off, differenceBetweenBufferLengthAndBufferIndex);
                     localCounter += differenceBetweenBufferLengthAndBufferIndex;
                     off += differenceBetweenBufferLengthAndBufferIndex;
                     bufferIndex = 0;
-                    int residue = len - differenceBetweenBufferLengthAndBufferIndex;
+                    int residue = length - differenceBetweenBufferLengthAndBufferIndex;
                     if (residue > (buffer.length - 1)) {
                         localCounter += target.read(b, off, residue);
                     } else {

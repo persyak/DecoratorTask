@@ -33,27 +33,27 @@ public class BufferedOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(byte[] b, int off, int length) throws IOException {
         if (isClosed) {
             throw new IOException("Stream closed");
         }
         if (b == null) {
             throw new NullPointerException("target array is null");
-        } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
+        } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
-                    "off or len is less than zero or len is greater than b length minus off");
+                    "off or length is less than zero or length is greater than b length minus off");
         }
-        if (len >= buffer.length) {
+        if (length >= buffer.length) {
             flush();
-            target.write(b, off, len);
+            target.write(b, off, length);
         } else {
-            if (len > (buffer.length - bufferIndex)) {
+            if (length > (buffer.length - bufferIndex)) {
                 flush();
-                System.arraycopy(b, off, buffer, bufferIndex, len);
-                bufferIndex += len;
+                System.arraycopy(b, off, buffer, bufferIndex, length);
+                bufferIndex += length;
             } else {
-                System.arraycopy(b, off, buffer, bufferIndex, len);
-                bufferIndex += len;
+                System.arraycopy(b, off, buffer, bufferIndex, length);
+                bufferIndex += length;
             }
         }
     }
