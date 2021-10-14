@@ -42,23 +42,18 @@ public class BufferedOutputStream extends OutputStream {
         } else if ((off < 0) || (len < 0) || (len > (b.length - off))) {
             throw new IndexOutOfBoundsException(
                     "off or len is less than zero or len is greater than b length minus off");
+        }
+        if (len >= buffer.length) {
+            flush();
+            target.write(b, off, len);
         } else {
-            if (len > buffer.length) {
-                target.write(b, off, len);
+            if (len > (buffer.length - bufferIndex)) {
+                flush();
+                System.arraycopy(b, off, buffer, bufferIndex, len);
+                bufferIndex += len;
             } else {
-                if (len > (buffer.length - bufferIndex)) {
-                    target.write(buffer, 0, bufferIndex);
-                    bufferIndex = 0;
-                }
-                for (int i = 0; i < len; i++) {
-                    buffer[bufferIndex] = b[off];
-                    bufferIndex++;
-                    off++;
-                    if (bufferIndex == buffer.length) {
-                        target.write(buffer);
-                        bufferIndex = 0;
-                    }
-                }
+                System.arraycopy(b, off, buffer, bufferIndex, len);
+                bufferIndex += len;
             }
         }
     }
@@ -77,11 +72,11 @@ public class BufferedOutputStream extends OutputStream {
         isClosed = true;
     }
 
-    byte[] getBuffer(){
+    byte[] getBuffer() {
         return buffer;
     }
 
-    int getIndex(){
+    int getIndex() {
         return bufferIndex;
     }
 }
