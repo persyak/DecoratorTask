@@ -25,16 +25,6 @@ public class ByteArrayOutputStreamTest {
     }
 
     @Test
-    public void testFlush() throws IOException {
-        //method flush does nothing so no need to test it
-    }
-
-    @Test
-    public void testClose() throws IOException {
-        //method close does nothing so no need to test it
-    }
-
-    @Test
     public void testWrite() throws IOException {
         String content = "Hello world";
         byte[] b = content.getBytes();

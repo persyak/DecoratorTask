@@ -47,7 +47,8 @@ public class BufferedOutputStream extends OutputStream {
             flush();
             target.write(b, off, length);
         } else {
-            if (length > (buffer.length - bufferIndex)) {
+            int spaceInBuffer = buffer.length - bufferIndex;
+            if (length > spaceInBuffer) {
                 flush();
                 System.arraycopy(b, off, buffer, bufferIndex, length);
                 bufferIndex += length;
@@ -70,6 +71,7 @@ public class BufferedOutputStream extends OutputStream {
         target.write(buffer, 0, bufferIndex);
         bufferIndex = 0;
         isClosed = true;
+        target.close();
     }
 
     byte[] getBuffer() {

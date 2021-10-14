@@ -12,11 +12,6 @@ public class ByteArrayInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b) throws IOException {
-        return read(b, 0, b.length);
-    }
-
-    @Override
     public int read(byte[] b, int off, int length) throws IOException {
         int localCounter = 0;
         if (b == null) {
@@ -24,27 +19,22 @@ public class ByteArrayInputStream extends InputStream {
         } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
                     "off or length is less than zero or length is greater than b length minus off");
-        } else {
-            if (length < (bytes.length - position)) {
-                for (int i = 0; i < length; i++) {
-                    b[off] = bytes[position];
-                    position++;
-                    off++;
-                    localCounter++;
-                }
-            } else if ((bytes.length - position) == 0) {
-                return -1;
-            } else {
-                int countMinusPosition = bytes.length - position;
-                for (int i = 0; i < countMinusPosition; i++) {
-                    b[off] = bytes[position];
-                    position++;
-                    off++;
-                    localCounter++;
-                }
-            }
-            return localCounter;
         }
+        int spaceInBuffer = bytes.length - position;
+        if (length < spaceInBuffer) {
+            System.arraycopy(bytes, position, b, off, length);
+            position += length;
+            off += length;
+            localCounter += length;
+        } else if (spaceInBuffer == 0) {
+            return -1;
+        } else {
+            System.arraycopy(bytes, position, b, off, spaceInBuffer);
+            position += spaceInBuffer;
+            off += spaceInBuffer;
+            localCounter += spaceInBuffer;
+        }
+        return localCounter;
     }
 
     @Override

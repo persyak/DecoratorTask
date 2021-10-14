@@ -5,13 +5,13 @@ import java.io.OutputStream;
 
 public class ByteArrayOutputStream extends OutputStream {
 
-    private final static int DEFAULT_ARRAY_SIZE = 32;
+    private final static int DEFAULT_CAPACITY = 32;
     private byte[] bytes;
     private int position = 0;
 //    bytes and position variables are protected in original class, it depends from needs. I leave them private;
 
     public ByteArrayOutputStream() {
-        this(DEFAULT_ARRAY_SIZE);
+        this(DEFAULT_CAPACITY);
     }
 
     public ByteArrayOutputStream(int size) {
@@ -33,28 +33,13 @@ public class ByteArrayOutputStream extends OutputStream {
         } else if ((off < 0) || (length < 0) || (length > (b.length - off))) {
             throw new IndexOutOfBoundsException(
                     "off or length is less than zero or length is greater than b length minus off");
-        } else {
-            for (int i = 0; i < length; i++) {
-                if (position == (bytes.length - 1)) {
-                    bytes = increase(bytes);
-                }
-                bytes[position] = b[off];
-                position++;
-                off++;
-            }
         }
-    }
-
-    @Override
-    public void flush() throws IOException {
-        //from what it's seen in JavaDoc, this method does nothing except the case when it's used in
-        //the end of output pipeline that includes a buffering component
-    }
-
-    @Override
-    public void close() throws IOException {
-        //Java doc sais it does nothing so the body of this method might be empty at all.
-        // I guess it will be depricated soon or any implementation will be added.
+            int spaceInBuffer = bytes.length - 1 - position;
+            if (length > spaceInBuffer) {
+                bytes = increase(bytes);
+            }
+            System.arraycopy(b, off, bytes, position, length);
+            position += length;
     }
 
     @Override
