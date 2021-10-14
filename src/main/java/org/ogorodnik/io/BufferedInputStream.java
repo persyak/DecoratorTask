@@ -79,15 +79,12 @@ public class BufferedInputStream extends InputStream {
     }
 
     @Override
-    public void close() {
-        isClosed = true;
+    public void close() throws IOException {
+        target.close();
     }
 
     @Override
     public int read() throws IOException {
-        if (isClosed) {
-            throw new IOException("Stream closed");
-        }
         if (bufferIndex == count) {
             count = target.read(buffer);
             bufferIndex = 0;

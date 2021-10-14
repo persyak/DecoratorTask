@@ -44,12 +44,24 @@ class BufferedInputStreamTest {
 
     @Test
     public void testClose() throws IOException {
-        String content = "Hello world";
+        new File("TestData").mkdir();
+        String path =  "TestData/File1.txt";
+        String text = "TestData/DataForCount/File1.txt file";
+        new File(path).createNewFile();
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path));
+        bufferedWriter.write(text);
+        bufferedWriter.newLine();
+        bufferedWriter.write(text);
+        bufferedWriter.flush();
+        bufferedWriter.close();
+        FileInputStream fileInputStream = new FileInputStream(path);
         BufferedInputStream bufferedInputStream
-                = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
-        assertEquals('H', (char) bufferedInputStream.read());
-        bufferedInputStream.close();
+                = new BufferedInputStream(fileInputStream, 1);
+        assertEquals('T', (char) bufferedInputStream.read());
+        fileInputStream.close();
         assertThrows(IOException.class, bufferedInputStream::read);
+        new File("TestData/File1.txt").delete();
+        new File("TestData").delete();
     }
 
     @Test
